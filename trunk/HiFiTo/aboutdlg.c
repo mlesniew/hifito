@@ -15,18 +15,38 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef IDC_STATIC
-#define IDC_STATIC (-1)
-#endif
+#include "hifito.h"
 
-#define IDI_HIFITO                              101
-#define IDD_ABOUT                               103
-#define IDD_SETUP                               108
-#define IDI_ABOUT                               113
-#define IDC_CHECKBOX_HIDDEN                     1005
-#define IDC_CHECKBOX_EXTENSIONS                 1006
-#define IDC_HOTKEY_EXTENSIONS                   1007
-#define IDC_HOTKEY_HIDDEN                       1008
-#define IDC_LABEL_HIDDEN                        1009
-#define IDC_LABEL_EXTENSIONS                    1010
-#define IDC_CHECKBOX_BALLOONS                   1012
+static BOOLEAN dialogVisible = FALSE;
+
+static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) { 
+
+	switch (message) {
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK) {
+			EndDialog(hwndDlg, IDOK);
+			return TRUE;
+		} else
+			return FALSE;
+	case WM_INITDIALOG:
+		dialogVisible = TRUE;
+		return TRUE;
+	case WM_DESTROY:
+		dialogVisible = FALSE;
+		return TRUE;
+	}
+
+	if (message == WM_COMMAND && LOWORD(wParam) == IDOK) {
+		EndDialog(hwndDlg, IDOK);
+		return TRUE;
+	} else 
+		return FALSE;
+}
+
+void openAboutDlg() {
+	if (!dialogVisible)
+		DialogBox(instance, 
+			MAKEINTRESOURCE(IDD_ABOUT), 
+			hMainWindow, 
+			DlgProc);
+}

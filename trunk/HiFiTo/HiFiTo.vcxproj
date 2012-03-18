@@ -80,13 +80,21 @@
     <None Include="Hifito.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="hifito.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="aboutdlg.c" />
+    <ClCompile Include="error.c" />
     <ClCompile Include="hifito.c" />
+    <ClCompile Include="hotkey.c" />
+    <ClCompile Include="mainwin.c" />
+    <ClCompile Include="settings.c" />
+    <ClCompile Include="settingsdlg.c" />
+    <ClCompile Include="toggle.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
