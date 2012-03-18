@@ -15,18 +15,23 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef IDC_STATIC
-#define IDC_STATIC (-1)
-#endif
+#include "hifito.h"
 
-#define IDI_HIFITO                              101
-#define IDD_ABOUT                               103
-#define IDD_SETUP                               108
-#define IDI_ABOUT                               113
-#define IDC_CHECKBOX_HIDDEN                     1005
-#define IDC_CHECKBOX_EXTENSIONS                 1006
-#define IDC_HOTKEY_EXTENSIONS                   1007
-#define IDC_HOTKEY_HIDDEN                       1008
-#define IDC_LABEL_HIDDEN                        1009
-#define IDC_LABEL_EXTENSIONS                    1010
-#define IDC_CHECKBOX_BALLOONS                   1012
+void fatal_error(_TCHAR * message) {
+	MessageBoxEx(hMainWindow, message, TEXT("Great Scott!"), MB_ICONERROR, 0);
+	exit(EXIT_FAILURE);
+}
+
+void warning(_TCHAR * message) {
+	MessageBoxEx(hMainWindow, message, TEXT("Whoa, this is heavy"), MB_ICONWARNING, 0);
+}
+
+void checkRegOperation(LSTATUS status, _TCHAR * message) {
+	if (status != ERROR_SUCCESS) 
+		fatal_error(message);
+}
+
+void check_not_null(void * ptr, _TCHAR * message) {
+	if (!ptr) 
+		fatal_error(message);
+}

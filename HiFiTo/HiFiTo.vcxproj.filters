@@ -26,6 +26,9 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hifito.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources.rc">
@@ -34,6 +37,27 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hifito.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="settingsdlg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mainwin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="toggle.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="error.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hotkey.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aboutdlg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="settings.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
