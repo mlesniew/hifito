@@ -127,7 +127,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				return DefWindowProc(hwnd, msg, wParam, lParam);
 			break;
         case WM_USER:
-			if (lParam ==WM_RBUTTONUP) {
+			if (lParam == WM_RBUTTONUP) {
                 POINT p;
 
 				CheckMenuItem(
@@ -144,6 +144,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 GetCursorPos(&p);
                 SetActiveWindow(hwnd);
                 TrackPopupMenuEx(hTrayPopup, TPM_LEFTALIGN, p.x, p.y, hwnd, NULL);
+				PostMessage(hwnd, WM_NULL, 0, 0);
             }
             break;
         default:

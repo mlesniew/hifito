@@ -16,28 +16,26 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "hifito.h"
+#include <WFExt.h>
 
 static const TCHAR regKey[] = TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced");
 
+static void refreshWindow(HWND parent, TCHAR * winClass, WPARAM wparam) {
+	HWND window = NULL;
+	TCHAR name[128];
+	while (window = FindWindowEx(parent, window, NULL, NULL)) {
+		GetClassName(window, name, 128);
+		if (_tcscmp(name, winClass) == 0) {
+			PostMessage(window, WM_COMMAND, wparam, 0); 
+		} else 
+			refreshWindow(window, winClass, wparam);
+	}
+}
+
 /* Refreshes all open Windows Explorer Windows and the desktop. */
 static void refreshExplorer() {
-	
-	HWND window;
-			
-	/* Update desktop */
-	window = FindWindow(_T("Progman"), NULL);
-	PostMessage(window, WM_COMMAND, 0xA220, 0);
-
-	window = NULL;
-
 	/* Update explorer windows */
-	while (1) {
-		window = FindWindowEx(NULL, window, _T("CabinetWClass"), NULL);
-		if (window != NULL)
-			PostMessage(window, WM_COMMAND, 0xA220, 0);
-		else 
-			break;
-	}
+	refreshWindow(NULL, _T("SHELLDLL_DefView"), 0x7103);
 }
 
 /* Checks or toggles a setting in the registry */

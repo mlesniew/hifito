@@ -22,7 +22,7 @@ FONT 8, "Microsoft Sans Serif"
 {
     DEFPUSHBUTTON   "OK", IDOK, 77, 52, 50, 14
     ICON            IDI_ABOUT, IDC_STATIC, 7, 7, 43, 39, SS_ICON | SS_REALSIZEIMAGE
-    LTEXT           "HiFiTo\nversion 1.0\nCopyright (C) 2012  Micha³ Leœniewski", IDC_STATIC, 60, 14, 125, 24, SS_LEFT
+    LTEXT           "HiFiTo\nversion 1.0.2\nCopyright (C) 2012  Micha³ Leœniewski", IDC_STATIC, 60, 14, 122, 24, SS_LEFT
 }
 
 
@@ -55,3 +55,42 @@ IDI_ABOUT          ICON           ".\\about.ico"
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDI_HIFITO         ICON           ".\\Hifito.ico"
+
+
+
+//
+// Version Information resources
+//
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+VERSION VERSIONINFO
+    FILEVERSION     1,0,2,0
+    PRODUCTVERSION  1,0,2,0
+    FILEOS          VOS_NT_WINDOWS32
+    FILETYPE        VFT_APP
+    FILESUBTYPE     VFT2_UNKNOWN
+    FILEFLAGSMASK   0x00000000
+    FILEFLAGS       0x00000000
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "0409FDE9"
+        {
+            VALUE "Comments", ""
+            VALUE "CompanyName", "Micha³ Leœniewski"
+            VALUE "FileDescription", "Hide or show hidden files and extensions using a hotkey or tray menu"
+            VALUE "FileVersion", "1.0.2"
+            VALUE "InternalName", "Hifito"
+            VALUE "LegalCopyright", "Copyright (C) 2012 Micha³ Leœniewski"
+            VALUE "LegalTrademarks", ""
+            VALUE "OriginalFilename", "Hifito.exe"
+            VALUE "PrivateBuild", ""
+            VALUE "ProductName", "Hifito"
+            VALUE "ProductVersion", "1.0.2"
+            VALUE "SpecialBuild", ""
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0409, 0xFDE9
+    }
+}
