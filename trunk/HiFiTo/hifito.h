@@ -24,6 +24,13 @@
 #define HOTKEY_ID_HIDDEN      1
 #define HOTKEY_ID_EXTENSIONS  2
 
+/* Internal Hifito messages */
+#define WM_HIFITO_NEWINSTANCE  WM_USER + 0x01
+
+/*  */
+#define HIFITO_WIN_CLASS  TEXT("HiFiToMessageWindowClass")
+#define HIFITO_WIN_NAME   TEXT("HiFiToMessageWindow")
+
 /* Settings structure -- all these settings are saved in the registry */
 typedef struct _SettingsT {
 	BOOL balloonsEnabled;
@@ -34,6 +41,7 @@ typedef struct _SettingsT {
 } SettingsT;
 
 extern SettingsT settings;
+
 extern HWND hMainWindow;
 extern HINSTANCE instance;
 
