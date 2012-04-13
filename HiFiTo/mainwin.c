@@ -28,8 +28,6 @@
 HWND hMainWindow;
 HMENU hTrayPopup;
 
-const TCHAR g_szClassName[] = TEXT("HiFiToMessageWindowClass");
-
 void popupBalloon(TCHAR * message) {
 	if (settings.balloonsEnabled) {
 		NOTIFYICONDATA nid;
@@ -126,6 +124,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			} else 
 				return DefWindowProc(hwnd, msg, wParam, lParam);
 			break;
+
         case WM_USER:
 			if (lParam == WM_RBUTTONUP) {
                 POINT p;
@@ -147,6 +146,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				PostMessage(hwnd, WM_NULL, 0, 0);
             }
             break;
+
+		case WM_HIFITO_NEWINSTANCE:
+			popupBalloon(TEXT("Hifito is already running."));
+			break;
+
         default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
     }
@@ -160,14 +164,14 @@ void createMainWinow() {
     wc.cbSize        = sizeof(WNDCLASSEX);
     wc.lpfnWndProc   = WndProc;
     wc.hInstance     = instance;
-    wc.lpszClassName = g_szClassName;
+    wc.lpszClassName = HIFITO_WIN_CLASS;
     
     check_not_null((void*) RegisterClassEx(&wc), TEXT("Couldn't register window class."));
     
     check_not_null(CreateWindowEx(
         WS_EX_CLIENTEDGE,
-        g_szClassName,
-        TEXT(""),
+        HIFITO_WIN_CLASS,
+        HIFITO_WIN_NAME,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, 240, 120,
         NULL, NULL, instance, NULL),

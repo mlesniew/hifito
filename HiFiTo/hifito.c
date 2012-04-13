@@ -26,19 +26,33 @@
 HINSTANCE instance;
 SettingsT settings;
 
+BOOL isAlreadyRunning() {
+	
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                     LPSTR lpszCmdLine, int nCmdShow) {
     
-	MSG msg;
-	instance = hInstance;
-		
-	loadSettings();
-	createMainWinow();
+	HWND window = FindWindow(HIFITO_WIN_CLASS, HIFITO_WIN_NAME);
 
-	while (GetMessage(&msg, NULL, 0, 0) != 0) {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-    
+	if ( window ) {
+		/* 
+		   Another Hifito instance is running, so we quit immediately.
+		   Before we do that, we send a message to the running instance
+		   to make it display a notification.
+		*/
+		PostMessage(window, WM_HIFITO_NEWINSTANCE, NULL, NULL);
+	} else {
+		MSG msg;
+		instance = hInstance;
+		
+		loadSettings();
+		createMainWinow();
+
+		while (GetMessage(&msg, NULL, 0, 0) != 0) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		}
+	}
 	return 0;
 }
