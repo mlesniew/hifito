@@ -1,0 +1,11 @@
+Version 1.0.3
+* Improved: Final binary size is now below 40 KB; 
+* Added: now only one instance of Hifito will be allowed to run at a time;
+* Fixed: the 32x32 format was missing in the program icon.
+
+Version 1.0.2
+* Fixed: the tray menu now disappears when the user clicks outside the menu (and it also doesn't break other pop-up tray menus);
+* Fixed: after changing one of the settings all windows with a file view are now refreshed - Desktop, Explorer and Open/Save dialogs. 
+
+Version 1.0(.1)
+* First beta version.
