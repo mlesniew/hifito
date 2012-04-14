@@ -140,8 +140,20 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				  MF_BYCOMMAND | (getHiddenExtensions() ? MF_CHECKED : MF_UNCHECKED)
 				);
 
+				/* 
+					The following code displays the tray menu. These magic calls 
+					around TrackPopupMenuEx are really necessary. We first need to 
+					bring the application window to the foreground (this is weird, 
+					the window isn't visible anyway) and after the menu is displayed 
+					we additionally need to post WM_NULL (the only message that 
+					must be ignored by any window) to our message window. Without 
+					this, the tray menu will not disappear if the user clicks 
+					somewhere outside it.
+
+					Bill, why?
+				*/
                 GetCursorPos(&p);
-                SetActiveWindow(hwnd);
+                SetForegroundWindow(hwnd);
                 TrackPopupMenuEx(hTrayPopup, TPM_LEFTALIGN, p.x, p.y, hwnd, NULL);
 				PostMessage(hwnd, WM_NULL, 0, 0);
             }
@@ -174,6 +186,6 @@ void createMainWinow() {
         HIFITO_WIN_NAME,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, 240, 120,
-        NULL, NULL, instance, NULL),
+        HWND_MESSAGE, NULL, instance, NULL),
 	TEXT("Couldn't create window."));
 }
