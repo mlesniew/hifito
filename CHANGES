@@ -1,3 +1,6 @@
+Version 1.0.4
+* Finally fixed the bug with the popup menu -- now it will disappear if the user clicks somewhere outside it.
+
 Version 1.0.3
 * Improved: Final binary size is now below 40 KB; 
 * Added: now only one instance of Hifito will be allowed to run at a time;
