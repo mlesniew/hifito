@@ -5,7 +5,6 @@
 #define IDI_HIFITO                              101
 #define IDD_ABOUT                               103
 #define IDD_SETUP                               108
-#define VERSION                                 114
 #define IDC_CHECKBOX_HIDDEN                     1005
 #define IDC_CHECKBOX_EXTENSIONS                 1006
 #define IDC_HOTKEY_EXTENSIONS                   1007
