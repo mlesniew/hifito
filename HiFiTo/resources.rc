@@ -14,15 +14,17 @@
 // Dialog resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-IDD_ABOUT DIALOG 0, 0, 193, 73
+IDD_ABOUT DIALOG 0, 0, 200, 136
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
 EXSTYLE WS_EX_WINDOWEDGE | WS_EX_TOPMOST
 CAPTION "About HiFiTo"
 FONT 8, "Microsoft Sans Serif"
 {
-    DEFPUSHBUTTON   "OK", IDOK, 71, 52, 50, 14
-    ICON            IDI_HIFITO, IDC_STATIC, 12, 12, 32, 30, SS_ICON | SS_REALSIZEIMAGE
-    LTEXT           "HiFiTo\nversion 1.0.3\nCopyright (C) 2012  Micha³ Leœniewski", IDC_STATIC, 53, 14, 130, 24, SS_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 72, 112, 56, 16
+    ICON            IDI_HIFITO, IDC_STATIC, 8, 8, 32, 30, SS_ICON | SS_REALSIZEIMAGE
+    LTEXT           "HiFiTo\nversion 1.0.4\nCopyright (C) 2012  Micha³ Leœniewski", IDC_STATIC, 48, 10, 122, 24, SS_LEFT
+    LTEXT           "Hifito is distributed under the \nGNU General Public License version 3.0.", IDC_STATIC, 12, 56, 176, 16, SS_LEFT
+    LTEXT           "You are welcome to send comments, feature request\nand bug reports to <mlesniew@users.sourceforge.net>", IDC_STATIC, 12, 80, 176, 16, SS_LEFT
 }
 
 
@@ -51,42 +53,3 @@ FONT 8, "Ms Shell Dlg"
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDI_HIFITO         ICON           ".\\Hifito.ico"
-
-
-
-//
-// Version Information resources
-//
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-VERSION VERSIONINFO
-    FILEVERSION     1,0,2,0
-    PRODUCTVERSION  1,0,2,0
-    FILEOS          VOS_NT_WINDOWS32
-    FILETYPE        VFT_APP
-    FILESUBTYPE     VFT2_UNKNOWN
-    FILEFLAGSMASK   0x00000000
-    FILEFLAGS       0x00000000
-{
-    BLOCK "StringFileInfo"
-    {
-        BLOCK "0409FDE9"
-        {
-            VALUE "Comments", ""
-            VALUE "CompanyName", "Micha³ Leœniewski"
-            VALUE "FileDescription", "Hide or show hidden files and extensions using a hotkey or tray menu"
-            VALUE "FileVersion", "1.0.2"
-            VALUE "InternalName", "Hifito"
-            VALUE "LegalCopyright", "Copyright (C) 2012 Micha³ Leœniewski"
-            VALUE "LegalTrademarks", ""
-            VALUE "OriginalFilename", "Hifito.exe"
-            VALUE "PrivateBuild", ""
-            VALUE "ProductName", "Hifito"
-            VALUE "ProductVersion", "1.0.2"
-            VALUE "SpecialBuild", ""
-        }
-    }
-    BLOCK "VarFileInfo"
-    {
-        VALUE "Translation", 0x0409, 0xFDE9
-    }
-}
