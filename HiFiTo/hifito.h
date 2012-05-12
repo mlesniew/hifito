@@ -74,5 +74,10 @@ void disableHotkeys();
 void loadSettings();
 void saveSettings();
 
+/* autostart.c */
+void autostartEnable(BOOLEAN enable);
+BOOLEAN autostartState();
+void autostartUpdate();
+
 /* mainwin.c */
 void createMainWinow();
