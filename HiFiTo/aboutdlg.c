@@ -19,34 +19,34 @@
 
 static BOOLEAN dialogVisible = FALSE;
 
-static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) { 
+static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 
-	switch (message) {
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK) {
-			EndDialog(hwndDlg, IDOK);
-			return TRUE;
-		} else
-			return FALSE;
-	case WM_INITDIALOG:
-		dialogVisible = TRUE;
-		return TRUE;
-	case WM_DESTROY:
-		dialogVisible = FALSE;
-		return TRUE;
-	}
-
-	if (message == WM_COMMAND && LOWORD(wParam) == IDOK) {
-		EndDialog(hwndDlg, IDOK);
-		return TRUE;
-	} else 
-		return FALSE;
+    switch (message) {
+        case WM_COMMAND:
+            if (LOWORD(wParam) == IDOK) {
+                EndDialog(hwndDlg, IDOK);
+                return TRUE;
+            } else
+                return FALSE;
+        case WM_INITDIALOG:
+            dialogVisible = TRUE;
+            return TRUE;
+        case WM_DESTROY:
+            dialogVisible = FALSE;
+            return TRUE;
+    }
+    
+    if (message == WM_COMMAND && LOWORD(wParam) == IDOK) {
+        EndDialog(hwndDlg, IDOK);
+        return TRUE;
+    } else
+        return FALSE;
 }
 
 void openAboutDlg() {
-	if (!dialogVisible)
-		DialogBox(instance, 
-			MAKEINTRESOURCE(IDD_ABOUT), 
-			hMainWindow, 
-			DlgProc);
+    if (!dialogVisible)
+        DialogBox(instance,
+                  MAKEINTRESOURCE(IDD_ABOUT),
+                  hMainWindow,
+                  DlgProc);
 }

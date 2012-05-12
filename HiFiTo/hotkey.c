@@ -18,59 +18,59 @@
 #include "hifito.h"
 
 static UINT getModifiers(UINT code) {
-	UINT result = 0;
-	code = HIBYTE(LOWORD(code));
-	if (code & HOTKEYF_ALT)
-		result |= MOD_ALT;
-	if (code & HOTKEYF_CONTROL)
-		result |= MOD_CONTROL;
-	if (code & HOTKEYF_SHIFT)
-		result |= MOD_SHIFT;
-	if (code & HOTKEYF_EXT)
-		result |= MOD_WIN;
-	return result;
+    UINT result = 0;
+    code = HIBYTE(LOWORD(code));
+    if (code & HOTKEYF_ALT)
+        result |= MOD_ALT;
+    if (code & HOTKEYF_CONTROL)
+        result |= MOD_CONTROL;
+    if (code & HOTKEYF_SHIFT)
+        result |= MOD_SHIFT;
+    if (code & HOTKEYF_EXT)
+        result |= MOD_WIN;
+    return result;
 }
 
 static UINT getVkey(UINT code) {
-	return LOBYTE(LOWORD(code));
+    return LOBYTE(LOWORD(code));
 }
 
 void enableHotkeys() {
 
-	BOOLEAN failHidden = FALSE;
-	BOOLEAN failExtensions = FALSE;
-
-	if (settings.extensionsHotkeyEnabled) {
-		if (!RegisterHotKey(hMainWindow, HOTKEY_ID_EXTENSIONS, getModifiers(settings.extensionsHotkey), getVkey(settings.extensionsHotkey))) {
-			DWORD e = GetLastError();
-			settings.extensionsHotkeyEnabled = FALSE;
-			failExtensions = TRUE;
-		}
-	}
-
-	if (settings.hiddenHotkeyEnabled) {
-		if (!RegisterHotKey(hMainWindow, HOTKEY_ID_HIDDEN, getModifiers(settings.hiddenHotkey), getVkey(settings.hiddenHotkey))) {
-			DWORD e = GetLastError();
-			settings.extensionsHotkeyEnabled = FALSE;
-			failHidden = TRUE;
-		}
-	}
-
-	if (failHidden && failExtensions) {
-		warning(TEXT("Couldn't register any hotkeys. Perhaps some other application already registered it. Changing the hotkey in the settings will probably fix this problem."));
-	} else if (failHidden) {
-		warning(TEXT("Couldn't register hotkey, that toggles visibility of hidden file. Perhaps some other application already registered it. Changing the hotkey in the settings will probably fix this problem."));
-	} else if (failExtensions) {
-		warning(TEXT("Couldn't register hotkey, that toggles visibility of file extensions. Perhaps some other application already registered it. Changing the hotkey in the settings will probably fix this problem."));
-	}
-
+    BOOLEAN failHidden = FALSE;
+    BOOLEAN failExtensions = FALSE;
+    
+    if (settings.extensionsHotkeyEnabled) {
+        if (!RegisterHotKey(hMainWindow, HOTKEY_ID_EXTENSIONS, getModifiers(settings.extensionsHotkey), getVkey(settings.extensionsHotkey))) {
+            DWORD e = GetLastError();
+            settings.extensionsHotkeyEnabled = FALSE;
+            failExtensions = TRUE;
+        }
+    }
+    
+    if (settings.hiddenHotkeyEnabled) {
+        if (!RegisterHotKey(hMainWindow, HOTKEY_ID_HIDDEN, getModifiers(settings.hiddenHotkey), getVkey(settings.hiddenHotkey))) {
+            DWORD e = GetLastError();
+            settings.extensionsHotkeyEnabled = FALSE;
+            failHidden = TRUE;
+        }
+    }
+    
+    if (failHidden && failExtensions) {
+        warning(TEXT("Couldn't register any hotkeys. Perhaps some other application already registered it. Changing the hotkey in the settings will probably fix this problem."));
+    } else if (failHidden) {
+        warning(TEXT("Couldn't register hotkey, that toggles visibility of hidden file. Perhaps some other application already registered it. Changing the hotkey in the settings will probably fix this problem."));
+    } else if (failExtensions) {
+        warning(TEXT("Couldn't register hotkey, that toggles visibility of file extensions. Perhaps some other application already registered it. Changing the hotkey in the settings will probably fix this problem."));
+    }
+    
 }
 
 void disableHotkeys() {
-	if (settings.extensionsHotkeyEnabled) {
-		UnregisterHotKey(hMainWindow, HOTKEY_ID_EXTENSIONS);
-	}
-	if (settings.hiddenHotkeyEnabled) {
-		UnregisterHotKey(hMainWindow, HOTKEY_ID_HIDDEN);
-	}
+    if (settings.extensionsHotkeyEnabled) {
+        UnregisterHotKey(hMainWindow, HOTKEY_ID_EXTENSIONS);
+    }
+    if (settings.hiddenHotkeyEnabled) {
+        UnregisterHotKey(hMainWindow, HOTKEY_ID_HIDDEN);
+    }
 }
