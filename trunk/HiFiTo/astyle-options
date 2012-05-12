@@ -1,0 +1,38 @@
+# Attach brackets
+--style=java
+
+# Use 4 spaces for indentation 
+--indent=spaces=4
+
+# Indent all the blocks!
+--indent-classes
+--indent-switches
+--indent-cases
+--indent-namespaces
+--indent-labels
+--indent-preprocessor
+--indent-col1-comments
+
+# Maximal indentation of continuation lines
+--max-instatement-indent=60
+
+# Pad operators 
+--pad-oper
+
+# Add space after if, while, for...
+--pad-header
+
+# Fill empty lines with indent from previous line
+--fill-empty-lines
+
+# Don't break one line blocks and statements
+--keep-one-line-blocks
+--keep-one-line-statements
+
+# Convert tabs to spaces
+--convert-tabs
+
+# Align pointer/reference to name
+--align-pointer=name
+--align-reference=name
+
