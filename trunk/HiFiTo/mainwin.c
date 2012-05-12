@@ -15,7 +15,6 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <time.h>
 #include "hifito.h"
 #include "resource.h"
 
@@ -117,6 +116,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                    make sure the settings are the same at startup. */
                 if (settings.sysfilesToo)
                     linkSystemWithHiddenFiles();
+                    
+                /* Check and correct the autostart entry if necessary. */
+                autostartUpdate();
             }
             break;
             

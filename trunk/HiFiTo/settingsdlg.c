@@ -32,6 +32,7 @@ static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM l
             SendMessage(GetDlgItem(hwndDlg, IDC_HOTKEY_HIDDEN), HKM_SETHOTKEY, settings.hiddenHotkey, 0);
             SendMessage(GetDlgItem(hwndDlg, IDC_HOTKEY_EXTENSIONS), HKM_SETHOTKEY, settings.extensionsHotkey, 0);
             SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_SYSFILES), BM_SETCHECK, settings.sysfilesToo, 0);
+            SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_AUTOSTART), BM_SETCHECK, autostartState(), 0);
             dialogVisible = TRUE;
             disableHotkeys();
             return TRUE;
@@ -69,6 +70,7 @@ static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM l
                         && (settings.hiddenHotkeyEnabled || settings.balloonsEnabled);
                     settings.sysfilesToo =
                         BST_CHECKED == SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_SYSFILES), BM_GETCHECK, 0, 0);
+                    autostartEnable(BST_CHECKED == SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_AUTOSTART), BM_GETCHECK, 0, 0));
                     saveSettings();
                 case IDCANCEL:
                     EndDialog(hwndDlg, LOWORD(wParam));
