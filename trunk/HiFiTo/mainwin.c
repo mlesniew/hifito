@@ -1,5 +1,5 @@
 /*
- *   HiFiTo: Hidden file toggler - hides or show hidden files using a hotkey.
+ *   Hifito: Hidden file toggler - hides or show hidden files using a hotkey.
  *   Copyright (C) 2012  Micha³ Leœniewski
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <time.h>
 #include "hifito.h"
 #include "resource.h"
 
@@ -60,10 +61,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                     openSettingsDlg();
                     break;
                 case IDPM_TOGGLE_HIDDEN:
-                    toggleHiddenFiles();
+                    if (settings.sysfilesToo)
+                        toggleHiddenAndSystemFiles();
+                    else
+                        toggleHiddenFiles();
                     break;
                 case IDPM_TOGGLE_EXTENSIONS:
-                    toggleHiddenExtensions();
+                    toggleExtensions();
                     break;
             }
             break;
@@ -82,13 +86,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         case WM_CREATE: {
                 NOTIFYICONDATA nid;
                 hMainWindow = hwnd;
+                
                 enableHotkeys();
                 
                 hTrayPopup = CreatePopupMenu();
-                AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_TOGGLE_HIDDEN, TEXT("Show hidden files"));
+                AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_TOGGLE_HIDDEN,
+                           settings.sysfilesToo ? TEXT("Show hidden and system files") : TEXT("Show hidden files"));
                 AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_TOGGLE_EXTENSIONS, TEXT("Show file extensions"));
                 AppendMenu(hTrayPopup, MF_SEPARATOR, 0, NULL);
-                AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_SETUP, TEXT("Setup"));
+                AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_SETUP, TEXT("Settings"));
                 AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_ABOUT, TEXT("About"));
                 AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_QUIT, TEXT("Quit"));
                 
@@ -106,25 +112,38 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 nid.hIcon               =   LoadIcon(instance, MAKEINTRESOURCE(IDI_HIFITO));
                 
                 Shell_NotifyIcon(NIM_ADD, &nid);
+                
+                /* If system files visibility is linked with hidden file visibility,
+                   make sure the settings are the same at startup. */
+                if (settings.sysfilesToo)
+                    linkSystemWithHiddenFiles();
             }
             break;
             
-        case WM_HOTKEY:
-            EndMenu();
-            if (wParam == HOTKEY_ID_HIDDEN) {
-                if (toggleHiddenFiles())
-                    popupBalloon(TEXT("Hidden files are now visible."));
-                else
-                    popupBalloon(TEXT("Hidden files are now invisible."));
-            } else if (wParam == HOTKEY_ID_EXTENSIONS) {
-                if (toggleHiddenExtensions())
-                    popupBalloon(TEXT("File name extensions are now visible."));
-                else
-                    popupBalloon(TEXT("File name extensions are now invisible."));
-            } else
-                return DefWindowProc(hwnd, msg, wParam, lParam);
-            break;
-            
+        case WM_HOTKEY: {
+                EndMenu();
+                
+                if (wParam == HOTKEY_ID_HIDDEN) {
+                    if (settings.sysfilesToo) {
+                        if (toggleHiddenAndSystemFiles())
+                            popupBalloon(TEXT("Hidden and system files are now visible."));
+                        else
+                            popupBalloon(TEXT("Hidden and system files are now invisible."));
+                    } else {
+                        if (toggleHiddenFiles())
+                            popupBalloon(TEXT("Hidden files are now visible."));
+                        else
+                            popupBalloon(TEXT("Hidden files are now invisible."));
+                    }
+                } else if (wParam == HOTKEY_ID_EXTENSIONS) {
+                    if (toggleExtensions())
+                        popupBalloon(TEXT("File name extensions are now visible."));
+                    else
+                        popupBalloon(TEXT("File name extensions are now invisible."));
+                } else
+                    return DefWindowProc(hwnd, msg, wParam, lParam);
+                break;
+            }
         case WM_USER:
             if (lParam == WM_RBUTTONUP) {
                 POINT p;

@@ -1,5 +1,5 @@
 /*
- *   HiFiTo: Hidden file toggler - hides or show hidden files using a hotkey.
+ *   Hifito: Hidden file toggler - hides or show hidden files using a hotkey.
  *   Copyright (C) 2012  Micha³ Leœniewski
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ static void refreshExplorer() {
 }
 
 /* Checks or toggles a setting in the registry */
-static BOOLEAN check_toggle(const _TCHAR *keyName, DWORD valueA, DWORD valueB, boolean toggle) {
+static BOOLEAN check_toggle(const _TCHAR *keyName, DWORD valueOn, DWORD valueOff, boolean set, boolean setEnabled) {
 
     HKEY key;
     DWORD value;
@@ -51,22 +51,9 @@ static BOOLEAN check_toggle(const _TCHAR *keyName, DWORD valueA, DWORD valueB, b
         TEXT("Error opening Explorer settings registry key.")
     );
     
-    /* Read old value */
-    checkRegOperation(
-        RegQueryValueEx(
-            key,
-            keyName,
-            NULL,
-            NULL,
-            (LPBYTE) &value,
-            &size
-        ),
-        TEXT("Error reading registry key value.")
-    );
-    
-    if (toggle) {
+    if (set) {
         /* Set new value */
-        value = (value == valueA) ? valueB : valueA;
+        value = setEnabled ? valueOn : valueOff;
         checkRegOperation(
             RegSetValueEx(
                 key,
@@ -77,6 +64,19 @@ static BOOLEAN check_toggle(const _TCHAR *keyName, DWORD valueA, DWORD valueB, b
             ),
             TEXT("Error writing registry key value.")
         );
+    } else {
+        /* Get current value */
+        checkRegOperation(
+            RegQueryValueEx(
+                key,
+                keyName,
+                NULL,
+                NULL,
+                (LPBYTE) &value,
+                &size
+            ),
+            TEXT("Error reading registry key value.")
+        );
     }
     
     /* Close registry key */
@@ -85,26 +85,47 @@ static BOOLEAN check_toggle(const _TCHAR *keyName, DWORD valueA, DWORD valueB, b
         TEXT("Error closing registry key. Now this is really weird.")
     );
     
-    if (toggle) {
-        /* The setting was toggled, so we need to refresh all Explorer windows */
-        refreshExplorer();
-    }
-    
-    return value == valueA;
-}
-
-BOOLEAN toggleHiddenFiles() {
-    return check_toggle(_T("Hidden"), 1, 2, TRUE);
-}
-
-BOOLEAN toggleHiddenExtensions() {
-    return check_toggle(_T("HideFileExt"), 0, 1, TRUE);
+    return value == valueOn;
 }
 
 BOOLEAN getHiddenFiles() {
-    return check_toggle(_T("Hidden"), 1, 2, FALSE);
+    return check_toggle(_T("Hidden"), 1, 2, FALSE, FALSE);
 }
 
 BOOLEAN getHiddenExtensions() {
-    return check_toggle(_T("HideFileExt"), 0, 1, FALSE);
+    return check_toggle(_T("HideFileExt"), 0, 1, FALSE, FALSE);
 }
+
+BOOLEAN getSystemFiles() {
+    return check_toggle(_T("ShowSuperHidden"), 0, 1, FALSE, FALSE);
+}
+
+void linkSystemWithHiddenFiles() {
+    BOOLEAN system = getSystemFiles();
+    BOOLEAN hidden = getHiddenFiles();
+    if (system != hidden) {
+        /* hidden files setting is different than systemFileSetting */
+        check_toggle(_T("ShowSuperHidden"), 0, 1, TRUE, hidden);
+        refreshExplorer();
+    }
+}
+
+BOOLEAN toggleHiddenAndSystemFiles() {
+    BOOLEAN result = check_toggle(_T("Hidden"), 1, 2, TRUE, !getHiddenFiles());
+    check_toggle(_T("ShowSuperHidden"), 1, 2, TRUE, result);
+    refreshExplorer();
+    return result;
+}
+
+BOOLEAN toggleHiddenFiles() {
+    BOOLEAN result = check_toggle(_T("Hidden"), 1, 2, TRUE, !getHiddenFiles());
+    refreshExplorer();
+    return result;
+}
+
+BOOLEAN toggleExtensions() {
+    BOOLEAN result = check_toggle(_T("HideFileExt"), 0, 1, TRUE, !getHiddenExtensions());
+    refreshExplorer();
+    return result;
+}
+
