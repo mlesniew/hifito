@@ -110,7 +110,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 nid.uCallbackMessage    =   WM_USER;
                 nid.hIcon               =   LoadIcon(instance, MAKEINTRESOURCE(IDI_HIFITO));
                 
-                Shell_NotifyIcon(NIM_ADD, &nid);
+				/* According to WinApi documentation, Bill thinks that displaying an icon
+				   in the tray menu is not a very important task. For this reason, the 
+				   system may sometimes refuse this kind of operation. Not because there 
+				   is an error, but because the system is just busy doing other important
+				   stuff. This usually only occurs during system startup. Again, according 
+				   to the WinApi documentation, the best thing to do in such cases is 
+				   waiting some time and trying again. */
+				while (!Shell_NotifyIcon(NIM_ADD, &nid)) {
+					/* Let's give Windows a whole second to let it finish its current job. */
+					Sleep(1000); 
+				}
                 
                 /* If system files visibility is linked with hidden file visibility,
                    make sure the settings are the same at startup. */
