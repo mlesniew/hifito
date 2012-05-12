@@ -1,5 +1,5 @@
 /*
- *   HiFiTo: Hidden file toggler - hides or show hidden files using a hotkey.
+ *   Hifito: Hidden file toggler - hides or show hidden files using a hotkey.
  *   Copyright (C) 2012  Micha³ Leœniewski
  *
  *   This program is free software: you can redistribute it and/or modify

@@ -1,5 +1,5 @@
 /*
- *   HiFiTo: Hidden file toggler - hides or show hidden files using a hotkey.
+ *   Hifito: Hidden file toggler - hides or show hidden files using a hotkey.
  *   Copyright (C) 2012  Micha³ Leœniewski
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM l
             EnableWindow(GetDlgItem(hwndDlg, IDC_CHECKBOX_BALLOONS), settings.hiddenHotkeyEnabled || settings.extensionsHotkeyEnabled);
             SendMessage(GetDlgItem(hwndDlg, IDC_HOTKEY_HIDDEN), HKM_SETHOTKEY, settings.hiddenHotkey, 0);
             SendMessage(GetDlgItem(hwndDlg, IDC_HOTKEY_EXTENSIONS), HKM_SETHOTKEY, settings.extensionsHotkey, 0);
+            SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_SYSFILES), BM_SETCHECK, settings.sysfilesToo, 0);
             dialogVisible = TRUE;
             disableHotkeys();
             return TRUE;
@@ -66,6 +67,8 @@ static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM l
                     settings.balloonsEnabled =
                         BST_CHECKED == SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_BALLOONS), BM_GETCHECK, 0, 0)
                         && (settings.hiddenHotkeyEnabled || settings.balloonsEnabled);
+                    settings.sysfilesToo =
+                        BST_CHECKED == SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_SYSFILES), BM_GETCHECK, 0, 0);
                     saveSettings();
                 case IDCANCEL:
                     EndDialog(hwndDlg, LOWORD(wParam));
@@ -75,6 +78,10 @@ static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM l
         case WM_DESTROY:
             dialogVisible = FALSE;
             enableHotkeys();
+            /* If system files visibility is linked with hidden file visibility,
+                   make sure the settings are the same after settings change. */
+            if (settings.sysfilesToo)
+                linkSystemWithHiddenFiles();
             return TRUE;
         default:
             return FALSE;

@@ -1,5 +1,5 @@
 /*
- *   HiFiTo: Hidden file toggler - hides or show hidden files using a hotkey.
+ *   Hifito: Hidden file toggler - hides or show hidden files using a hotkey.
  *   Copyright (C) 2012  Micha³ Leœniewski
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -17,48 +17,47 @@
  */
 #include "hifito.h"
 
-/* Registry key, where HiFiTo settings are saved */
-static const TCHAR regKey[] = TEXT("Software\\HiFiTo");
+/* Registry key, where Hifito settings are saved */
+static const TCHAR regKey[] = TEXT("Software\\Hifito");
 
 void loadDefaultSettings() {
     settings.balloonsEnabled = TRUE;
     settings.hiddenHotkeyEnabled = TRUE;
+    settings.sysfilesToo = FALSE;
     settings.extensionsHotkeyEnabled = TRUE;
     settings.hiddenHotkey = 0x648;       /* == ALT + CTRL + H */
     settings.extensionsHotkey = 0x645;   /* == ALT + CTRL + E */
-    saveSettings();
 }
 
 /* Helper macros for easy reading/writing settings from/to registry */
 #define loadSetting(S) \
     size = sizeof(settings.S); \
-    if (RegQueryValueEx(key, TEXT(# S), NULL, NULL, (LPBYTE) &settings.S, &size) != ERROR_SUCCESS) { \
-        RegCloseKey(key); \
-        loadDefaultSettings(); \
-        return; \
-    }
+    RegQueryValueEx(key, TEXT(# S), NULL, NULL, (LPBYTE) &settings.S, &size);
+/* Ignore errors -- if loading fails, we'll use default value loaded before. */
 
 #define saveSetting(S) \
     checkRegOperation(RegSetValueEx(key, TEXT(#S), 0, REG_DWORD, (LPBYTE) &settings.S, sizeof(settings.S)), \
                       TEXT("Couldn't store the ") TEXT(#S) TEXT(" setting in registry."))
 
-
 void loadSettings() {
     HKEY key;
     DWORD size;
     
+    /* First load default settings. */
+    loadDefaultSettings();
+    
     /* Open registry key */
     if (RegOpenKey(HKEY_CURRENT_USER, regKey, &key) != ERROR_SUCCESS) {
-        loadDefaultSettings();
         return;
     }
     
-    /* Load the settings */
+    /* Load the individual settings */
     loadSetting(balloonsEnabled);
     loadSetting(hiddenHotkeyEnabled);
     loadSetting(extensionsHotkeyEnabled);
     loadSetting(hiddenHotkey);
     loadSetting(extensionsHotkey);
+    loadSetting(sysfilesToo);
     
     /* Close registry key */
     RegCloseKey(key);
@@ -70,15 +69,16 @@ void saveSettings() {
     /* Open registry key */
     checkRegOperation(
         RegCreateKeyEx(HKEY_CURRENT_USER, regKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key, NULL),
-        TEXT("Couldn't create registry key for HiFiTo settings.")
+        TEXT("Couldn't create registry key for Hifito settings.")
     );
     
-    /* Load the settings */
+    /* Save the settings */
     saveSetting(balloonsEnabled);
     saveSetting(hiddenHotkeyEnabled);
     saveSetting(extensionsHotkeyEnabled);
     saveSetting(hiddenHotkey);
     saveSetting(extensionsHotkey);
+    saveSetting(sysfilesToo);
     
     /* Close registry key */
     RegCloseKey(key);

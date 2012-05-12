@@ -1,5 +1,5 @@
 /*
- *   HiFiTo: Hidden file toggler - hides or show hidden files using a hotkey.
+ *   Hifito: Hidden file toggler - hides or show hidden files using a hotkey.
  *   Copyright (C) 2012  Micha³ Leœniewski
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -28,8 +28,8 @@
 #define WM_HIFITO_NEWINSTANCE  WM_USER + 0x01
 
 /*  */
-#define HIFITO_WIN_CLASS  TEXT("HiFiToMessageWindowClass")
-#define HIFITO_WIN_NAME   TEXT("HiFiToMessageWindow")
+#define HIFITO_WIN_CLASS  TEXT("HifitoMessageWindowClass")
+#define HIFITO_WIN_NAME   TEXT("HifitoMessageWindow")
 
 /* Settings structure -- all these settings are saved in the registry */
 typedef struct _SettingsT {
@@ -38,6 +38,7 @@ typedef struct _SettingsT {
     BOOL extensionsHotkeyEnabled;
     UINT hiddenHotkey;
     UINT extensionsHotkey;
+    BOOL sysfilesToo;
 } SettingsT;
 
 extern SettingsT settings;
@@ -47,9 +48,11 @@ extern HINSTANCE instance;
 
 /* toggle.c */
 BOOLEAN toggleHiddenFiles();
-BOOLEAN toggleHiddenExtensions();
+BOOLEAN toggleExtensions();
+BOOLEAN toggleHiddenAndSystemFiles();
 BOOLEAN getHiddenFiles();
 BOOLEAN getHiddenExtensions();
+void linkSystemWithHiddenFiles();
 
 /* error.c */
 void fatal_error(_TCHAR *message);

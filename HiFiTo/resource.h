@@ -12,3 +12,4 @@
 #define IDC_LABEL_HIDDEN                        1009
 #define IDC_LABEL_EXTENSIONS                    1010
 #define IDC_CHECKBOX_BALLOONS                   1012
+#define IDC_CHECKBOX_SYSFILES                   1014
