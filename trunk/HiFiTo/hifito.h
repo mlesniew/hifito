@@ -33,11 +33,11 @@
 
 /* Settings structure -- all these settings are saved in the registry */
 typedef struct _SettingsT {
-	BOOL balloonsEnabled;
-	BOOL hiddenHotkeyEnabled;
-	BOOL extensionsHotkeyEnabled;
-	UINT hiddenHotkey;
-	UINT extensionsHotkey;
+    BOOL balloonsEnabled;
+    BOOL hiddenHotkeyEnabled;
+    BOOL extensionsHotkeyEnabled;
+    UINT hiddenHotkey;
+    UINT extensionsHotkey;
 } SettingsT;
 
 extern SettingsT settings;
@@ -52,10 +52,10 @@ BOOLEAN getHiddenFiles();
 BOOLEAN getHiddenExtensions();
 
 /* error.c */
-void fatal_error(_TCHAR * message);
-void warning(_TCHAR * message);
-void checkRegOperation(LSTATUS status, _TCHAR * message);
-void check_not_null(void * ptr, _TCHAR * message);
+void fatal_error(_TCHAR *message);
+void warning(_TCHAR *message);
+void checkRegOperation(LSTATUS status, _TCHAR *message);
+void check_not_null(void *ptr, _TCHAR *message);
 
 /* about.c */
 void openAboutDlg();

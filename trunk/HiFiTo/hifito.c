@@ -27,28 +27,28 @@ HINSTANCE instance;
 SettingsT settings;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                    LPSTR lpszCmdLine, int nCmdShow) {
+                   LPSTR lpszCmdLine, int nCmdShow) {
+                   
+    HWND window = FindWindow(HIFITO_WIN_CLASS, HIFITO_WIN_NAME);
     
-	HWND window = FindWindow(HIFITO_WIN_CLASS, HIFITO_WIN_NAME);
-
-	if (window) {
-		/* 
-		   Another Hifito instance is running, so we quit immediately.
-		   Before we do that, we send a message to the running instance
-		   to make it display a notification.
-		*/
-		PostMessage(window, WM_HIFITO_NEWINSTANCE, 0, 0);
-	} else {
-		MSG msg;
-		instance = hInstance;
-		
-		loadSettings();
-		createMainWinow();
-
-		while (GetMessage(&msg, NULL, 0, 0) != 0) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-		}
-	}
-	return 0;
+    if (window) {
+        /*
+           Another Hifito instance is running, so we quit immediately.
+           Before we do that, we send a message to the running instance
+           to make it display a notification.
+        */
+        PostMessage(window, WM_HIFITO_NEWINSTANCE, 0, 0);
+    } else {
+        MSG msg;
+        instance = hInstance;
+        
+        loadSettings();
+        createMainWinow();
+        
+        while (GetMessage(&msg, NULL, 0, 0) != 0) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+    return 0;
 }

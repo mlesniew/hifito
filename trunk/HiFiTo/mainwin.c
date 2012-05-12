@@ -28,44 +28,44 @@
 HWND hMainWindow;
 HMENU hTrayPopup;
 
-void popupBalloon(TCHAR * message) {
-	if (settings.balloonsEnabled) {
-		NOTIFYICONDATA nid;
-		ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
-		nid.cbSize              =   sizeof(NOTIFYICONDATA);
-		nid.hWnd                =   hMainWindow;
-		nid.uID                 =   0;
-		nid.uFlags              =   NIF_INFO;
-		lstrcpy(nid.szInfo, message);
-		Shell_NotifyIcon(NIM_MODIFY, &nid);
-	}
+void popupBalloon(TCHAR *message) {
+    if (settings.balloonsEnabled) {
+        NOTIFYICONDATA nid;
+        ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
+        nid.cbSize              =   sizeof(NOTIFYICONDATA);
+        nid.hWnd                =   hMainWindow;
+        nid.uID                 =   0;
+        nid.uFlags              =   NIF_INFO;
+        lstrcpy(nid.szInfo, message);
+        Shell_NotifyIcon(NIM_MODIFY, &nid);
+    }
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	
+
     switch (msg) {
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
             
         case WM_COMMAND:
-			switch (wParam) {
-			case IDPM_QUIT:
-				DestroyWindow(hwnd);
-				break;
-			case IDPM_ABOUT:
-				openAboutDlg();
-				break;
-			case IDPM_SETUP:
-				openSettingsDlg();
-				break;
-			case IDPM_TOGGLE_HIDDEN:
-				toggleHiddenFiles();
-				break;
-			case IDPM_TOGGLE_EXTENSIONS:
-				toggleHiddenExtensions();
-				break;
-			}
+            switch (wParam) {
+                case IDPM_QUIT:
+                    DestroyWindow(hwnd);
+                    break;
+                case IDPM_ABOUT:
+                    openAboutDlg();
+                    break;
+                case IDPM_SETUP:
+                    openSettingsDlg();
+                    break;
+                case IDPM_TOGGLE_HIDDEN:
+                    toggleHiddenFiles();
+                    break;
+                case IDPM_TOGGLE_EXTENSIONS:
+                    toggleHiddenExtensions();
+                    break;
+            }
             break;
             
         case WM_DESTROY: {
@@ -81,15 +81,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             
         case WM_CREATE: {
                 NOTIFYICONDATA nid;
-				hMainWindow = hwnd;
-				enableHotkeys();
-
-				hTrayPopup = CreatePopupMenu();
-				AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_TOGGLE_HIDDEN, TEXT("Show hidden files"));
-				AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_TOGGLE_EXTENSIONS, TEXT("Show file extensions"));
-				AppendMenu(hTrayPopup, MF_SEPARATOR, 0, NULL);
-				AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_SETUP, TEXT("Setup"));
-				AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_ABOUT, TEXT("About"));
+                hMainWindow = hwnd;
+                enableHotkeys();
+                
+                hTrayPopup = CreatePopupMenu();
+                AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_TOGGLE_HIDDEN, TEXT("Show hidden files"));
+                AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_TOGGLE_EXTENSIONS, TEXT("Show file extensions"));
+                AppendMenu(hTrayPopup, MF_SEPARATOR, 0, NULL);
+                AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_SETUP, TEXT("Setup"));
+                AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_ABOUT, TEXT("About"));
                 AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_QUIT, TEXT("Quit"));
                 
                 ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
@@ -108,61 +108,61 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 Shell_NotifyIcon(NIM_ADD, &nid);
             }
             break;
-        
-		case WM_HOTKEY:
-			EndMenu();
-			if (wParam == HOTKEY_ID_HIDDEN) {
-				if (toggleHiddenFiles())
-					popupBalloon(TEXT("Hidden files are now visible."));
-				else
-					popupBalloon(TEXT("Hidden files are now invisible."));
-			} else if (wParam == HOTKEY_ID_EXTENSIONS) {
-				if (toggleHiddenExtensions())
-					popupBalloon(TEXT("File name extensions are now visible."));
-				else
-					popupBalloon(TEXT("File name extensions are now invisible."));
-			} else 
-				return DefWindowProc(hwnd, msg, wParam, lParam);
-			break;
-
+            
+        case WM_HOTKEY:
+            EndMenu();
+            if (wParam == HOTKEY_ID_HIDDEN) {
+                if (toggleHiddenFiles())
+                    popupBalloon(TEXT("Hidden files are now visible."));
+                else
+                    popupBalloon(TEXT("Hidden files are now invisible."));
+            } else if (wParam == HOTKEY_ID_EXTENSIONS) {
+                if (toggleHiddenExtensions())
+                    popupBalloon(TEXT("File name extensions are now visible."));
+                else
+                    popupBalloon(TEXT("File name extensions are now invisible."));
+            } else
+                return DefWindowProc(hwnd, msg, wParam, lParam);
+            break;
+            
         case WM_USER:
-			if (lParam == WM_RBUTTONUP) {
+            if (lParam == WM_RBUTTONUP) {
                 POINT p;
-
-				CheckMenuItem(
-				  hTrayPopup,
-				  IDPM_TOGGLE_HIDDEN,
-				  MF_BYCOMMAND | (getHiddenFiles() ? MF_CHECKED : MF_UNCHECKED)
-				);
-				CheckMenuItem(
-				  hTrayPopup,
-				  IDPM_TOGGLE_EXTENSIONS,
-				  MF_BYCOMMAND | (getHiddenExtensions() ? MF_CHECKED : MF_UNCHECKED)
-				);
-
-				/* 
-					The following code displays the tray menu. These magic calls 
-					around TrackPopupMenuEx are really necessary. We first need to 
-					bring the application window to the foreground (this is weird, 
-					the window isn't visible anyway) and after the menu is displayed 
-					we additionally need to post WM_NULL (the only message that 
-					must be ignored by any window) to our message window. Without 
-					this, the tray menu will not disappear if the user clicks 
-					somewhere outside it.
-
-					Bill, why?
-				*/
+                
+                CheckMenuItem(
+                    hTrayPopup,
+                    IDPM_TOGGLE_HIDDEN,
+                    MF_BYCOMMAND | (getHiddenFiles() ? MF_CHECKED : MF_UNCHECKED)
+                );
+                CheckMenuItem(
+                    hTrayPopup,
+                    IDPM_TOGGLE_EXTENSIONS,
+                    MF_BYCOMMAND | (getHiddenExtensions() ? MF_CHECKED : MF_UNCHECKED)
+                );
+                
+                /*
+                    The following code displays the tray menu. These magic calls
+                    around TrackPopupMenuEx are really necessary. We first need to
+                    bring the application window to the foreground (this is weird,
+                    the window isn't visible anyway) and after the menu is displayed
+                    we additionally need to post WM_NULL (the only message that
+                    must be ignored by any window) to our message window. Without
+                    this, the tray menu will not disappear if the user clicks
+                    somewhere outside it.
+                
+                    Bill, why?
+                */
                 GetCursorPos(&p);
                 SetForegroundWindow(hwnd);
                 TrackPopupMenuEx(hTrayPopup, TPM_LEFTALIGN, p.x, p.y, hwnd, NULL);
-				PostMessage(hwnd, WM_NULL, 0, 0);
+                PostMessage(hwnd, WM_NULL, 0, 0);
             }
             break;
-
-		case WM_HIFITO_NEWINSTANCE:
-			popupBalloon(TEXT("Hifito is already running."));
-			break;
-
+            
+        case WM_HIFITO_NEWINSTANCE:
+            popupBalloon(TEXT("Hifito is already running."));
+            break;
+            
         default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
     }
@@ -178,14 +178,14 @@ void createMainWinow() {
     wc.hInstance     = instance;
     wc.lpszClassName = HIFITO_WIN_CLASS;
     
-    check_not_null((void*) RegisterClassEx(&wc), TEXT("Couldn't register window class."));
+    check_not_null((void *) RegisterClassEx(&wc), TEXT("Couldn't register window class."));
     
     check_not_null(CreateWindowEx(
-        WS_EX_CLIENTEDGE,
-        HIFITO_WIN_CLASS,
-        HIFITO_WIN_NAME,
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, 240, 120,
-        HWND_MESSAGE, NULL, instance, NULL),
-	TEXT("Couldn't create window."));
+                       WS_EX_CLIENTEDGE,
+                       HIFITO_WIN_CLASS,
+                       HIFITO_WIN_NAME,
+                       WS_OVERLAPPEDWINDOW,
+                       CW_USEDEFAULT, CW_USEDEFAULT, 240, 120,
+                       HWND_MESSAGE, NULL, instance, NULL),
+                   TEXT("Couldn't create window."));
 }
