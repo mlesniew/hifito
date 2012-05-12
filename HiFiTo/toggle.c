@@ -46,25 +46,25 @@ static BOOLEAN check_toggle(const _TCHAR *keyName, DWORD valueOn, DWORD valueOff
     DWORD size = sizeof(value);
     
     /* Open registry key */
-	if (RegOpenKey(HKEY_CURRENT_USER, regKey, &key) != ERROR_SUCCESS)
+    if (RegOpenKey(HKEY_CURRENT_USER, regKey, &key) != ERROR_SUCCESS)
         fatal_error(TEXT("Error opening Explorer settings registry key."));
-    
+        
     if (set) {
         /* Set new value */
         value = setEnabled ? valueOn : valueOff;
-		checkRegOperation(RegSetValueEx(key, keyName, 0, REG_DWORD,
-                (const BYTE *) &value, size),
-			TEXT("Error writing registry key value."));
+        checkRegOperation(RegSetValueEx(key, keyName, 0, REG_DWORD,
+                                        (const BYTE *) &value, size),
+                          TEXT("Error writing registry key value."));
     } else {
         /* Get current value */
         if (RegQueryValueEx(key, keyName, NULL, NULL,
-			(LPBYTE) &value, &size) != ERROR_SUCCESS) {
-			/* An error here means, that the given registry value
-			is missing. In this case, we assume, that the setting 
-			is disabled. The same assumption is done by Explorer 
-			in case of a missing ShowSuperHidden value. */
-			value = valueOff;
-		}
+                            (LPBYTE) &value, &size) != ERROR_SUCCESS) {
+            /* An error here means, that the given registry value
+            is missing. In this case, we assume, that the setting
+            is disabled. The same assumption is done by Explorer
+            in case of a missing ShowSuperHidden value. */
+            value = valueOff;
+        }
     }
     
     /* Close registry key */

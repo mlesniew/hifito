@@ -60,7 +60,10 @@ void loadSettings() {
     loadSetting(sysfilesToo);
     
     /* Close registry key */
-    RegCloseKey(key);
+    checkRegOperation(
+        RegCloseKey(key),
+        TEXT("Error closing registry key. Now this is really weird.")
+    );
 }
 
 void saveSettings() {
@@ -81,5 +84,8 @@ void saveSettings() {
     saveSetting(sysfilesToo);
     
     /* Close registry key */
-    RegCloseKey(key);
+    checkRegOperation(
+        RegCloseKey(key),
+        TEXT("Error closing registry key. Now this is really weird.")
+    );
 }
