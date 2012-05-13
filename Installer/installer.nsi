@@ -64,7 +64,7 @@ SectionEnd
 ; Autostart
 Section "Start Hifito at system startup"
 	CreateShortCut "$SMPROGRAMS\Hifito\Hifito.lnk" "$INSTDIR\Hifito.exe" "" "$INSTDIR\Hifito.exe" 0  
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "Hifito" '"$INSTDIR\Hifito.exe"'
+	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "Hifito" '"$INSTDIR\Hifito.exe"'
 SectionEnd
 
 Section "Start Hifito after installation"
@@ -80,7 +80,7 @@ Section "Uninstall"
 	; Remove registry keys
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hifito"
 	DeleteRegKey HKCU "Software\Hifito"
-	DeleteRegValue HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "Hifito"
+	DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "Hifito"
 
 	; Remove files and uninstaller
 	Delete $INSTDIR\Hifito.exe
