@@ -1,5 +1,13 @@
+Version 1.1
+* Added: System file visibility can now be toggled together with the hidden files.
+* Added: Hifito can has an option to automatically start at system startup.
+* Fixed: Sometimes the Hifito icon did not show up in the tray menu (this usually occured only when Hifito was started during system startup or when the system was really busy or low on resources).
+* Fixed: Hifito crashed saying "Error reading registry key value" if hidden file visibility was never enabled on a system manually.
+* Added: Created an automatic installer.
+* Improved: All registry operations are now checked for errors.
+
 Version 1.0.4
-* Finally fixed the bug with the popup menu -- now it will disappear if the user clicks somewhere outside it.
+* Fixed: the bug with the popup menu will disappear if the user clicks somewhere outside it.
 
 Version 1.0.3
 * Improved: Final binary size is now below 40 KB; 
@@ -7,7 +15,7 @@ Version 1.0.3
 * Fixed: the 32x32 format was missing in the program icon.
 
 Version 1.0.2
-* Fixed: the tray menu now disappears when the user clicks outside the menu (and it also doesn't break other pop-up tray menus);
+* Fixed: the tray menu now disappears when the user clicks outside the menu (and it also doesn't break other pop-up tray menus) [Update: It turned out later that this fix didn't really solve all pop-up menu problems. A complete fix was applied in version 1.0.4];
 * Fixed: after changing one of the settings all windows with a file view are now refreshed - Desktop, Explorer and Open/Save dialogs. 
 
 Version 1.0(.1)
