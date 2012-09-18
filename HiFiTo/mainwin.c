@@ -108,7 +108,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 nid.uID                 =   0;
                 nid.uFlags              =   NIF_ICON | NIF_MESSAGE;
                 nid.uCallbackMessage    =   WM_USER;
-				nid.hIcon               =   LoadImage(instance, MAKEINTRESOURCE(IDI_HIFITO), IMAGE_ICON, 16, 16, LR_SHARED);
+                nid.hIcon               =   LoadImage(instance, MAKEINTRESOURCE(IDI_HIFITO), IMAGE_ICON, 16, 16, LR_SHARED);
                 
                 /* According to WinApi documentation, Bill thinks that displaying an icon
                    in the tray menu is not a very important task. For this reason, the

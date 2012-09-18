@@ -40,8 +40,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         PostMessage(window, WM_HIFITO_NEWINSTANCE, 0, 0);
     } else {
         MSG msg;
-        instance = hInstance;        
-
+        instance = hInstance;
+        
         loadSettings();
         createMainWinow();
         
@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
             switch (GetMessage(&msg, NULL, 0, 0)) {
                 case FALSE:
                     /* WM_QUIT received */
-                    return msg.wParam; 
+                    return msg.wParam;
                 case -1:
                     /* GetMessage failed */
                     fatal_error(TEXT("Call Bill and explain to him how booleans work."));
