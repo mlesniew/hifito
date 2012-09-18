@@ -1,39 +1,77 @@
 !include WinMessages.nsh
+!include "MUI2.nsh"
 
-Name "Hifito"
-OutFile "hifito-setup.exe"
-Icon "install.ico"
-InstallDir $PROGRAMFILES\Hifito
-InstallDirRegKey HKLM "Software\Hifito" "InstallDir"
-RequestExecutionLevel admin
-XPStyle on
-CRCCheck on
+;--- General ----------------------------------------------------------------
 
-;--- Pages ------------------------------------------------------------------
+	Name "Hifito"
+	OutFile "Hifito-setup.exe"
 
-Page license
-Page components
-Page directory
-Page instfiles
+	InstallDir $PROGRAMFILES\Hifito
+	InstallDirRegKey HKLM "Software\Hifito" "InstallDir"	
 
-UninstPage uninstConfirm
-UninstPage instfiles
-
-LicenseText "This setup will install Hifito. Please read and agree to the license terms below before continuing."
-LicenseData "license.rtf"
-
+	RequestExecutionLevel admin
+	
+	!define MUI_ICON "Hifito.ico"
+	!define MUI_UNICON "Hifito.ico"
+	
 ;--- Functions --------------------------------------------------------------
 
 !macro CloseHifito
+	retry:
 	FindWindow $0 "HifitoMessageWindowClass" "HifitoMessageWindow"
 		StrCmp $0 0 notRunning
 		SendMessage $0 ${WM_CLOSE} 0 0
+		; Give the instance some time to close and retry 
+		sleep 1000	
+		goto retry
 	notRunning:
 !macroend
+	
+;--- Variables --------------------------------------------------------------
+	
+	Var StartMenuFolder
+	
+;--- Interface settings -----------------------------------------------------
+
+	!define MUI_ABORTWARNING
+
+;--- Pages ------------------------------------------------------------------
+	
+	!insertmacro 	MUI_PAGE_WELCOME
+	
+	!define 		MUI_LICENSEPAGE_CHECKBOX
+	!insertmacro 	MUI_PAGE_LICENSE "License.txt"
+	
+	!define 		MUI_COMPONENTSPAGE_NODESC
+	!insertmacro 	MUI_PAGE_COMPONENTS
+	
+	!insertmacro 	MUI_PAGE_DIRECTORY
+	
+	!define 		MUI_STARTMENUPAGE_REGISTRY_ROOT 				"HKCU" 
+	!define 		MUI_STARTMENUPAGE_REGISTRY_KEY 					"Software\Hifito" 
+	!define 		MUI_STARTMENUPAGE_REGISTRY_VALUENAME 			"Hifito"
+	!insertmacro 	MUI_PAGE_STARTMENU Application $StartMenuFolder
+	
+	!insertmacro 	MUI_PAGE_INSTFILES
+	
+	!define 		MUI_FINISHPAGE_RUN   			"$INSTDIR\Hifito.exe"
+	!define 		MUI_FINISHPAGE_SHOWREADME 		"$INSTDIR\Readme.txt"
+	!define 		MUI_FINISHPAGE_LINK				"Visit Hifito Website"
+	!define 		MUI_FINISHPAGE_LINK_LOCATION 	"http://mlesniew.wordpress.com/Hifito"
+	!insertmacro 	MUI_PAGE_FINISH
+
+	!insertmacro MUI_UNPAGE_WELCOME
+	!insertmacro MUI_UNPAGE_CONFIRM
+	!insertmacro MUI_UNPAGE_INSTFILES
+	!insertmacro MUI_UNPAGE_FINISH
+
+;--- Language ---------------------------------------------------------------
+	
+!insertmacro MUI_LANGUAGE "English"
 
 ;--- Sections ---------------------------------------------------------------
 
-Section "Hifito"
+Section "Hifito program files" SecDefault
 	SectionIn RO
 
 	; Close Hifito
@@ -42,7 +80,9 @@ Section "Hifito"
 	; Install files
 	SetOutPath $INSTDIR
 	File "Hifito.exe"
+	File "License.txt"
 	File "Readme.txt"
+	File "Hifito.exe"
 	
 	; Write the uninstall keys for Windows
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hifito" "DisplayName" "Hifito"
@@ -51,26 +91,20 @@ Section "Hifito"
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hifito" "NoRepair" 1
 	WriteUninstaller "uninstall.exe"
 	
-SectionEnd
-
-; Start menu icons
-Section "Create Start Menu Shortcuts"
-	CreateDirectory "$SMPROGRAMS\Hifito"
-	CreateShortCut "$SMPROGRAMS\Hifito\Hifito.lnk" "$INSTDIR\Hifito.exe" "" "$INSTDIR\Hifito.exe" 0  
-	CreateShortCut "$SMPROGRAMS\Hifito\Hifito readme.lnk" "$INSTDIR\Readme.txt" "" "$INSTDIR\Readme.txt" 0    
-	CreateShortCut "$SMPROGRAMS\Hifito\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+	; Start menu entries
+	!insertmacro MUI_STARTMENU_WRITE_BEGIN Application
+		CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
+		CreateShortCut  "$SMPROGRAMS\$StartMenuFolder\Hifito.lnk" "$INSTDIR\Hifito.exe"
+		CreateShortCut  "$SMPROGRAMS\$StartMenuFolder\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+	!insertmacro MUI_STARTMENU_WRITE_END
+	
 SectionEnd
 
 ; Autostart
-Section "Start Hifito at system startup"
-	CreateShortCut "$SMPROGRAMS\Hifito\Hifito.lnk" "$INSTDIR\Hifito.exe" "" "$INSTDIR\Hifito.exe" 0  
+Section "Launch Hifito on system startup" SecAutostart
 	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "Hifito" '"$INSTDIR\Hifito.exe"'
 SectionEnd
-
-Section "Start Hifito after installation"
-	Exec "$INSTDIR\Hifito.exe"
-SectionEnd
-
+  
 ;--- Uninstaller ------------------------------------------------------------
 
 Section "Uninstall"
@@ -84,11 +118,12 @@ Section "Uninstall"
 
 	; Remove files and uninstaller
 	Delete $INSTDIR\Hifito.exe
-	Delete $INSTDIR\Readme.txt
 	Delete $INSTDIR\uninstall.exe
 
+	!insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
+	
 	; Remove shortcuts, if any
-	Delete "$SMPROGRAMS\Hifito\*.*"
+	Delete "$SMPROGRAMS\$StartMenuFolder\*.*"
 
 	; Remove directories used
 	RMDir "$SMPROGRAMS\Hifito"
