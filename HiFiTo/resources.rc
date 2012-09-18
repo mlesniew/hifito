@@ -14,24 +14,25 @@
 // Dialog resources
 //
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-IDD_ABOUT DIALOG 0, 0, 200, 128
-STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+IDD_ABOUT DIALOGEX 0, 0, 208, 123
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION
 EXSTYLE WS_EX_WINDOWEDGE | WS_EX_TOPMOST
 CAPTION "About Hifito"
-FONT 8, "Microsoft Sans Serif"
-{
-    DEFPUSHBUTTON   "OK", IDOK, 72, 104, 56, 16
-    ICON            IDI_HIFITO, IDC_STATIC, 8, 8, 32, 30, SS_ICON | SS_REALSIZEIMAGE
-    LTEXT           "Hifito\nversion 1.1\nCopyright (C) 2012  Micha³ Leœniewski", IDC_STATIC, 48, 10, 122, 24, SS_LEFT
-    LTEXT           "Hifito is distributed under the \nGNU General Public License version 3.0.", IDC_STATIC, 12, 48, 176, 16, SS_LEFT
-    LTEXT           "You are welcome to send comments, feature request\nand bug reports to <mlesniew@users.sourceforge.net>", IDC_STATIC, 12, 76, 176, 16, SS_LEFT
-}
-
-
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,143,102,50,14
+    PUSHBUTTON      "Visit website",IDC_WEBSITE,15,102,50,14
+    PUSHBUTTON      "Donate",IDC_DONATE,79,102,50,14
+    ICON            IDI_HIFITO,IDC_STATIC,12,12,20,20,SS_ICON | SS_REALSIZEIMAGE
+    LTEXT           "Hifito\nversion 1.2\nCopyright (C) 2012  Micha³ Leœniewski",IDC_STATIC,48,12,144,30
+    LTEXT           "Hifito is distributed under the \nGNU General Public License version 3.0.",IDC_STATIC,12,48,180,18
+    LTEXT           "You are welcome to send comments, feature request\nand bug reports to <mlesniew@users.sourceforge.net>",IDC_STATIC,12,72,180,18
+END
 
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 IDD_SETUP DIALOG 0, 0, 166, 178
-STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION
+EXSTYLE WS_EX_WINDOWEDGE | WS_EX_TOPMOST
 CAPTION "Hifito settings"
 FONT 8, "Ms Shell Dlg"
 {
@@ -47,8 +48,6 @@ FONT 8, "Ms Shell Dlg"
     LTEXT           "Hotkey", IDC_LABEL_HIDDEN, 36, 26, 24, 8, SS_LEFT
     LTEXT           "Hotkey", IDC_LABEL_EXTENSIONS, 36, 66, 24, 8, SS_LEFT
 }
-
-
 
 //
 // Icon resources
