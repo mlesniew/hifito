@@ -55,10 +55,10 @@ BOOLEAN getHiddenExtensions();
 void linkSystemWithHiddenFiles();
 
 /* error.c */
-void fatal_error(_TCHAR *message);
-void warning(_TCHAR *message);
-void checkRegOperation(LSTATUS status, _TCHAR *message);
-void check_not_null(void *ptr, _TCHAR *message);
+void fatal_error(TCHAR *message);
+void warning(TCHAR *message);
+void checkRegOperation(LSTATUS status, TCHAR *message);
+void check_not_null(void *ptr, TCHAR *message);
 
 /* about.c */
 void openAboutDlg();

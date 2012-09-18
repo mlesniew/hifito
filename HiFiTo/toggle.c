@@ -35,11 +35,11 @@ static void refreshWindow(HWND parent, TCHAR *winClass, WPARAM wparam) {
 /* Refreshes all open Windows Explorer Windows and the desktop. */
 static void refreshExplorer() {
     /* Update explorer windows */
-    refreshWindow(NULL, _T("SHELLDLL_DefView"), 0x7103);
+    refreshWindow(NULL, TEXT("SHELLDLL_DefView"), 0x7103);
 }
 
 /* Checks or toggles a setting in the registry */
-static BOOLEAN check_toggle(const _TCHAR *keyName, DWORD valueOn, DWORD valueOff, boolean set, boolean setEnabled) {
+static BOOLEAN check_toggle(const TCHAR *keyName, DWORD valueOn, DWORD valueOff, boolean set, boolean setEnabled) {
 
     HKEY key;
     DWORD value;
@@ -77,15 +77,15 @@ static BOOLEAN check_toggle(const _TCHAR *keyName, DWORD valueOn, DWORD valueOff
 }
 
 BOOLEAN getHiddenFiles() {
-    return check_toggle(_T("Hidden"), 1, 2, FALSE, FALSE);
+    return check_toggle(TEXT("Hidden"), 1, 2, FALSE, FALSE);
 }
 
 BOOLEAN getHiddenExtensions() {
-    return check_toggle(_T("HideFileExt"), 0, 1, FALSE, FALSE);
+    return check_toggle(TEXT("HideFileExt"), 0, 1, FALSE, FALSE);
 }
 
 BOOLEAN getSystemFiles() {
-    return check_toggle(_T("ShowSuperHidden"), 0, 1, FALSE, FALSE);
+    return check_toggle(TEXT("ShowSuperHidden"), 0, 1, FALSE, FALSE);
 }
 
 void linkSystemWithHiddenFiles() {
@@ -93,26 +93,26 @@ void linkSystemWithHiddenFiles() {
     BOOLEAN hidden = getHiddenFiles();
     if (system != hidden) {
         /* hidden files setting is different than systemFileSetting */
-        check_toggle(_T("ShowSuperHidden"), 0, 1, TRUE, hidden);
+        check_toggle(TEXT("ShowSuperHidden"), 0, 1, TRUE, hidden);
         refreshExplorer();
     }
 }
 
 BOOLEAN toggleHiddenAndSystemFiles() {
-    BOOLEAN result = check_toggle(_T("Hidden"), 1, 2, TRUE, !getHiddenFiles());
-    check_toggle(_T("ShowSuperHidden"), 1, 2, TRUE, result);
+    BOOLEAN result = check_toggle(TEXT("Hidden"), 1, 2, TRUE, !getHiddenFiles());
+    check_toggle(TEXT("ShowSuperHidden"), 1, 2, TRUE, result);
     refreshExplorer();
     return result;
 }
 
 BOOLEAN toggleHiddenFiles() {
-    BOOLEAN result = check_toggle(_T("Hidden"), 1, 2, TRUE, !getHiddenFiles());
+    BOOLEAN result = check_toggle(TEXT("Hidden"), 1, 2, TRUE, !getHiddenFiles());
     refreshExplorer();
     return result;
 }
 
 BOOLEAN toggleExtensions() {
-    BOOLEAN result = check_toggle(_T("HideFileExt"), 0, 1, TRUE, !getHiddenExtensions());
+    BOOLEAN result = check_toggle(TEXT("HideFileExt"), 0, 1, TRUE, !getHiddenExtensions());
     refreshExplorer();
     return result;
 }
