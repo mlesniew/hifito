@@ -23,11 +23,19 @@ static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM l
 
     switch (message) {
         case WM_COMMAND:
-            if (LOWORD(wParam) == IDOK) {
-                EndDialog(hwndDlg, IDOK);
-                return TRUE;
-            } else
-                return FALSE;
+            switch (LOWORD(wParam)) {
+                case IDOK:
+                    EndDialog(hwndDlg, IDOK);
+                    return TRUE;
+                case IDC_DONATE:
+                    ShellExecute(NULL, NULL, TEXT("http://sourceforge.net/donate/?user_id=3740414"), NULL, NULL, SW_SHOW);
+                    return TRUE;
+                case IDC_WEBSITE:
+                    ShellExecute(NULL, NULL, TEXT("http://mlesniew.wordpress.com/hifito"), NULL, NULL, SW_SHOW);
+                    return TRUE;
+                default:
+                    return FALSE;
+            }
         case WM_INITDIALOG:
             dialogVisible = TRUE;
             return TRUE;
