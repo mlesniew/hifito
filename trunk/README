@@ -23,7 +23,7 @@ Hifito can run on Windows XP, Windows Vista and Windows 7 (and probably Windows 
 Installation
 ------------
 
-The program is a single native Windows executable, you can put it anywhere on your disk and start it from there. If you would like to make Hifito start automatically during system startup, create a shortcut to Hifito.exe in your startup menu (Start Menu > All Programs > Startup). 
+There is an automatic installer available for Hifito. Manual installation is also possible and very simple. As the program is a single native Windows executable, you can download it (Hifito.exe), put it anywhere on your disk and start it from there. 
 
 
 Reporting bugs and feedback

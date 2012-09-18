@@ -1,3 +1,7 @@
+Version 1.2
+* Improved stability.
+* Updated installer.
+
 Version 1.1
 * Added: System file visibility can now be toggled together with the hidden files.
 * Added: Hifito can has an option to automatically start at system startup.
