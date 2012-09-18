@@ -17,21 +17,21 @@
  */
 #include "hifito.h"
 
-void fatal_error(_TCHAR *message) {
+void fatal_error(TCHAR *message) {
     MessageBoxEx(NULL, message, TEXT("Great Scott!"), MB_ICONERROR, 0);
     exit(EXIT_FAILURE);
 }
 
-void warning(_TCHAR *message) {
+void warning(TCHAR *message) {
     MessageBoxEx(NULL, message, TEXT("Whoa, this is heavy"), MB_ICONWARNING, 0);
 }
 
-void checkRegOperation(LSTATUS status, _TCHAR *message) {
+void checkRegOperation(LSTATUS status, TCHAR *message) {
     if (status != ERROR_SUCCESS)
         fatal_error(message);
 }
 
-void check_not_null(void *ptr, _TCHAR *message) {
+void check_not_null(void *ptr, TCHAR *message) {
     if (!ptr)
         fatal_error(message);
 }
