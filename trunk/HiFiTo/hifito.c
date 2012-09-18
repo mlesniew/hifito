@@ -18,8 +18,8 @@
 
 /* Make sure the Window uses Visual Styles */
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
-	name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
-	processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+    name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+    processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 #include "hifito.h"
 
@@ -40,15 +40,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         PostMessage(window, WM_HIFITO_NEWINSTANCE, 0, 0);
     } else {
         MSG msg;
-        instance = hInstance;
-        
+        instance = hInstance;        
+
         loadSettings();
         createMainWinow();
         
-        while (GetMessage(&msg, NULL, 0, 0) != 0) {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+        while (1) {
+            switch (GetMessage(&msg, NULL, 0, 0)) {
+                case FALSE:
+                    /* WM_QUIT received */
+                    return msg.wParam; 
+                case -1:
+                    /* GetMessage failed */
+                    fatal_error(TEXT("Call Bill and explain to him how booleans work."));
+                default:    /* TRUE */
+                    /* Message received */
+                    TranslateMessage(&msg);
+                    DispatchMessage(&msg);
+            }
         }
     }
-    return 0;
 }
