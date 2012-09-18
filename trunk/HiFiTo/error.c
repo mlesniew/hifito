@@ -18,12 +18,12 @@
 #include "hifito.h"
 
 void fatal_error(_TCHAR *message) {
-    MessageBoxEx(hMainWindow, message, TEXT("Great Scott!"), MB_ICONERROR, 0);
+    MessageBoxEx(NULL, message, TEXT("Great Scott!"), MB_ICONERROR, 0);
     exit(EXIT_FAILURE);
 }
 
 void warning(_TCHAR *message) {
-    MessageBoxEx(hMainWindow, message, TEXT("Whoa, this is heavy"), MB_ICONWARNING, 0);
+    MessageBoxEx(NULL, message, TEXT("Whoa, this is heavy"), MB_ICONWARNING, 0);
 }
 
 void checkRegOperation(LSTATUS status, _TCHAR *message) {
