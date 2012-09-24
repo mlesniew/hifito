@@ -18,7 +18,11 @@
 #include "hifito.h"
 
 /* Registry key, where Hifito settings are saved */
+#ifdef PORTABLE
+static const TCHAR appName[] = TEXT("Hifito");
+#else
 static const TCHAR regKey[] = TEXT("Software\\Hifito");
+#endif
 
 void loadDefaultSettings() {
     settings.balloonsEnabled = TRUE;
@@ -28,6 +32,71 @@ void loadDefaultSettings() {
     settings.hiddenHotkey = 0x648;       /* == ALT + CTRL + H */
     settings.extensionsHotkey = 0x645;   /* == ALT + CTRL + E */
 }
+
+#ifdef PORTABLE
+
+BOOL WritePrivateProfileInt(
+  _In_  LPCTSTR lpAppName,
+  _In_  LPCTSTR lpKeyName,
+  _In_  LPINT   lpInt,
+  _In_  LPCTSTR lpFileName
+) {
+    /* Unfortunately there is no WritePrivateProfileInt in the WinAPI, so we
+       need to provide our own. To implement it we can of course use the other
+       function, WritePrivateProfileString, but we first need to convert the 
+       integer to a string. For this we could use a sprintf-like function, but
+       for some reason this makes the final binary grow by 15KB. To avoid this
+       we use a quick and dirty int to string conversion. It isn't very fast,
+       but it's simple and it's good enough for our task. */
+    if (!lpInt) {
+        return WritePrivateProfileString(lpAppName, lpKeyName, NULL, lpFileName);
+    } else {
+        TCHAR buf[11], *t;
+        int i = *lpInt;
+        int j = 10;
+        
+        buf[10] = TEXT('\0');
+        for (j = 9; j >= 0; i /= 10, --j) 
+            buf[j] = TEXT('0') + (i % 10);
+
+        /* skip leading zeros */
+        for (t = buf; t[1] && (t[0] == TEXT('0')); ++t);
+
+        return WritePrivateProfileString(lpAppName, lpKeyName, buf, lpFileName);
+    }
+}
+
+TCHAR * getIniPath() {
+    static TCHAR lpIniFile[MAX_PATH] = { 0 };
+
+    if (!*lpIniFile) {
+        TCHAR * t;
+        GetModuleFileName(NULL, lpIniFile, MAX_PATH);
+
+        /* go to end of string */
+        for (t = lpIniFile; *t; ++t);
+
+        /* go back to last backslash */
+        while ((t > lpIniFile) && (*t != TEXT('\\'))) --t;
+
+        /* replace backslash with null */
+        *t = TEXT('\0');
+
+        /* append file name */
+        _tcsncat(lpIniFile, TEXT("\\Hifito.ini"), MAX_PATH);
+
+    } /* else: use cached value */
+
+    return lpIniFile;
+}
+
+#define loadSetting(S) \
+    settings.S = GetPrivateProfileInt(appName, TEXT(#S), settings.S, getIniPath());
+
+#define saveSetting(S) \
+    WritePrivateProfileInt(appName, TEXT(#S), (INT *) &settings.S, getIniPath());
+
+#else
 
 /* Helper macros for easy reading/writing settings from/to registry */
 #define loadSetting(S) \
@@ -39,17 +108,23 @@ void loadDefaultSettings() {
     checkRegOperation(RegSetValueEx(key, TEXT(#S), 0, REG_DWORD, (LPBYTE) &settings.S, sizeof(settings.S)), \
                       TEXT("Couldn't store the ") TEXT(#S) TEXT(" setting in registry."))
 
+#endif
+
 void loadSettings() {
+#ifndef PORTABLE
     HKEY key;
     DWORD size;
+#endif
     
     /* First load default settings. */
     loadDefaultSettings();
     
+#ifndef PORTABLE
     /* Open registry key */
     if (RegOpenKey(HKEY_CURRENT_USER, regKey, &key) != ERROR_SUCCESS) {
         return;
     }
+#endif
     
     /* Load the individual settings */
     loadSetting(balloonsEnabled);
@@ -58,15 +133,18 @@ void loadSettings() {
     loadSetting(hiddenHotkey);
     loadSetting(extensionsHotkey);
     loadSetting(sysfilesToo);
-    
+   
+#ifndef PORTABLE
     /* Close registry key */
     checkRegOperation(
         RegCloseKey(key),
         TEXT("Error closing registry key. Now this is really weird.")
     );
+#endif
 }
 
 void saveSettings() {
+#ifndef PORTABLE
     HKEY key;
     
     /* Open registry key */
@@ -74,6 +152,7 @@ void saveSettings() {
         RegCreateKeyEx(HKEY_CURRENT_USER, regKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &key, NULL),
         TEXT("Couldn't create registry key for Hifito settings.")
     );
+#endif
     
     /* Save the settings */
     saveSetting(balloonsEnabled);
@@ -83,9 +162,12 @@ void saveSettings() {
     saveSetting(extensionsHotkey);
     saveSetting(sysfilesToo);
     
+#ifndef PORTABLE
     /* Close registry key */
     checkRegOperation(
         RegCloseKey(key),
         TEXT("Error closing registry key. Now this is really weird.")
     );
+#endif
+
 }

@@ -32,7 +32,12 @@ static BOOL CALLBACK DlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM l
             SendMessage(GetDlgItem(hwndDlg, IDC_HOTKEY_HIDDEN), HKM_SETHOTKEY, settings.hiddenHotkey, 0);
             SendMessage(GetDlgItem(hwndDlg, IDC_HOTKEY_EXTENSIONS), HKM_SETHOTKEY, settings.extensionsHotkey, 0);
             SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_SYSFILES), BM_SETCHECK, settings.sysfilesToo, 0);
+#ifdef PORTABLE
+            SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_AUTOSTART), BM_SETCHECK, FALSE, 0);
+            EnableWindow(GetDlgItem(hwndDlg, IDC_CHECKBOX_AUTOSTART), FALSE);
+#else 
             SendMessage(GetDlgItem(hwndDlg, IDC_CHECKBOX_AUTOSTART), BM_SETCHECK, autostartState(), 0);
+#endif
             dialogVisible = TRUE;
             disableHotkeys();
             return TRUE;
