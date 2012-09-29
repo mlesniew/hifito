@@ -32,10 +32,10 @@ void popupBalloon(TCHAR *message) {
     if (settings.balloonsEnabled) {
         NOTIFYICONDATA nid;
         ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
-        nid.cbSize              =   sizeof(NOTIFYICONDATA);
+        nid.cbSize              =   NOTIFYICONDATA_V2_SIZE;
         nid.hWnd                =   hMainWindow;
         nid.uID                 =   0;
-        nid.uFlags              =   NIF_INFO;
+        nid.uFlags              =   NIF_INFO | NIF_SHOWTIP;
         lstrcpy(nid.szInfo, message);
         Shell_NotifyIcon(NIM_MODIFY, &nid);
     }
@@ -74,7 +74,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         case WM_DESTROY: {
                 NOTIFYICONDATA nid;
                 ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
-                nid.cbSize              =   sizeof(NOTIFYICONDATA);
+                nid.cbSize              =   NOTIFYICONDATA_V2_SIZE;
                 nid.hWnd                =   hwnd;
                 nid.uID                 =   0;
                 Shell_NotifyIcon(NIM_DELETE, &nid);
@@ -98,12 +98,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 AppendMenu(hTrayPopup, MF_ENABLED | MF_STRING, IDPM_QUIT, TEXT("Quit"));
                 
                 ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
-                nid.cbSize = sizeof(NOTIFYICONDATA);
-                nid.uVersion = NOTIFYICON_VERSION_4;
+                nid.cbSize = NOTIFYICONDATA_V2_SIZE;
+                nid.uVersion = NOTIFYICON_VERSION;
                 Shell_NotifyIcon(NIM_SETVERSION, &nid);
                 
                 ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
-                nid.cbSize              =   sizeof(NOTIFYICONDATA);
+                nid.cbSize              =   NOTIFYICONDATA_V2_SIZE;
                 nid.hWnd                =   hwnd;
                 nid.uID                 =   0;
                 nid.uFlags              =   NIF_ICON | NIF_MESSAGE;
