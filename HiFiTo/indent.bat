@@ -1,1 +1,0 @@
-astyle --options=astyle-options *.c *.h

@@ -1,3 +1,7 @@
+Version 1.3
+* Added: Visibility of hidden files or extensions can now be toggled with tray icon double click
+* Fixed: Balloons now show up properly on Windows XP too.
+
 Version 1.2
 * Improved stability.
 * Updated installer.
